@@ -1,8 +1,8 @@
 package com.example.zadanie_room;
-import androidx.room3.Delete;
-import androidx.room3.Insert;
-import androidx.room3.Query;
-import androidx.room3.Update;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 import java.util.List;
 
 public interface FilmDAO {
@@ -21,7 +21,7 @@ public interface FilmDAO {
     @Query("SELECT * from filmy")
     public List<Film> zwrocWszystkieFilmy();
 
-    @Query("SELECT nazwa from filmy where ileMinut = :ile")
+    @Query("SELECT nazwa from filmy where ileM = :ile")
     public List<String> zwrocNazwyFilmowDlaLiczbyMinut(int ile);
 
 

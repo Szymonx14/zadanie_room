@@ -1,11 +1,15 @@
 package com.example.zadanie_room;
 
-import androidx.room3.Entity;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "gry")
 public class Film {
+    @PrimaryKey(autoGenerate = true)
     public int id;
     public String nazwa;
+    @ColumnInfo(name = "ileM")
     public int ileMinut;
     public String kategoriaNazwa;
     public boolean czyAnimacja;
