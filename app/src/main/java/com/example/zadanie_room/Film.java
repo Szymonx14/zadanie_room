@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "gry")
+@Entity(tableName = "filmy")
 public class Film {
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -15,8 +15,7 @@ public class Film {
     public boolean czyAnimacja;
     public String rezyser;
 
-    public Film(int id, String nazwa, int ileMinut, String kategoriaNazwa, boolean czyAnimacja, String rezyser) {
-        this.id = id;
+    public Film(String nazwa, int ileMinut, String kategoriaNazwa, boolean czyAnimacja, String rezyser) {
         this.nazwa = nazwa;
         this.ileMinut = ileMinut;
         this.kategoriaNazwa = kategoriaNazwa;

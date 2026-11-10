@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">zadanie_room</string>
+    <string-array name="Categories">
+        <item>Akcja</item>
+        <item>Horror</item>
+        <item>Komedia</item>
+        <item>Thriller</item>
+    </string-array>
 </resources>
