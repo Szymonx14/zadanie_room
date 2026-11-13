@@ -21,18 +21,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnDodaj;
-    EditText etMin,etNazwa,etRezyser;
+    Button btnDodaj, btnAktualizuj;
+    EditText etMin, etNazwa, etRezyser;
     Spinner spNazwaKategori;
-
     Switch swAnimacja;
-
     ListView listView;
 
     List<Film> filmList;
     ArrayAdapter<Film> arrayAdapter;
     Film selectedCardToEdit = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +43,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FilmDatabase filmDatabase = Room.databaseBuilder(
-                getApplicationContext(), FilmDatabase.class, "film_db")
+                        getApplicationContext(), FilmDatabase.class, "film_db")
                 .allowMainThreadQueries().build();
 
-
         btnDodaj = findViewById(R.id.btnSend);
+        btnAktualizuj = findViewById(R.id.buttonAktualizacja);
         etNazwa = findViewById(R.id.etName);
         etMin = findViewById(R.id.etMin);
         swAnimacja = findViewById(R.id.switch1);
         spNazwaKategori = findViewById(R.id.spCategoryName);
         etRezyser = findViewById(R.id.etDirector);
-
         listView = findViewById(R.id.listView);
+
+        filmList = filmDatabase.zwrocGryDao().zwrocWszystkieFilmy();
+        arrayAdapter = new ArrayAdapter<>(
+                MainActivity.this,
+                android.R.layout.simple_list_item_1,
+                filmList
+        );
+        listView.setAdapter(arrayAdapter);
+
 
         btnDodaj.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,33 +73,83 @@ public class MainActivity extends AppCompatActivity {
                         spNazwaKategori.getSelectedItem().toString(),
                         swAnimacja.isChecked(),
                         etRezyser.getText().toString()
-
                 );
                 filmDatabase.zwrocGryDao().wstawFilmDoBazy(film);
+
+
+                odswiezListe(filmDatabase);
+                wyczyscPola();
             }
         });
 
-        filmList = filmDatabase.zwrocGryDao().zwrocWszystkieFilmy();
-        arrayAdapter = new ArrayAdapter<>(
-                MainActivity.this,
-                android.R.layout.simple_list_item_1,
-                filmList
-        );
-        listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedCardToEdit = filmList.get(i);
+
+                etNazwa.setText(selectedCardToEdit.nazwa);
+                etMin.setText(String.valueOf(selectedCardToEdit.ileMinut));
+                swAnimacja.setChecked(selectedCardToEdit.czyAnimacja);
+                etRezyser.setText(selectedCardToEdit.rezyser);
+
+
+                ArrayAdapter spinnerAdapter = (ArrayAdapter) spNazwaKategori.getAdapter();
+                int pozycja = spinnerAdapter.getPosition(selectedCardToEdit.kategoriaNazwa);
+                spNazwaKategori.setSelection(pozycja);
+
+
+                btnAktualizuj.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        btnAktualizuj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedCardToEdit != null) {
+
+                    selectedCardToEdit.nazwa = etNazwa.getText().toString();
+                    selectedCardToEdit.ileMinut = Integer.parseInt(etMin.getText().toString());
+                    selectedCardToEdit.kategoriaNazwa = spNazwaKategori.getSelectedItem().toString();
+                    selectedCardToEdit.czyAnimacja = swAnimacja.isChecked();
+                    selectedCardToEdit.rezyser = etRezyser.getText().toString();
+
+
+                    filmDatabase.zwrocGryDao().aktualizujFilm(selectedCardToEdit);
+
+
+                    odswiezListe(filmDatabase);
+                    wyczyscPola();
+                    selectedCardToEdit = null;
+                    btnAktualizuj.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 filmDatabase.zwrocGryDao().usunZBazy(filmList.get(i));
                 filmList.remove(i);
                 arrayAdapter.notifyDataSetChanged();
-
-                return false;
+                return true;
             }
         });
+    }
 
+    private void odswiezListe(FilmDatabase db) {
+        filmList.clear();
+        filmList.addAll(db.zwrocGryDao().zwrocWszystkieFilmy());
+        arrayAdapter.notifyDataSetChanged();
+    }
 
-
+    private void wyczyscPola() {
+        etNazwa.setText("");
+        etMin.setText("");
+        etRezyser.setText("");
+        swAnimacja.setChecked(false);
+        spNazwaKategori.setSelection(0);
     }
 }

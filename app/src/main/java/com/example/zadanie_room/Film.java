@@ -25,13 +25,12 @@ public class Film {
 
     @Override
     public String toString() {
-        return "Film{" +
-                "id=" + id +
-                ", nazwa='" + nazwa + '\'' +
-                ", ileMinut=" + ileMinut +
-                ", kategoriaNazwa='" + kategoriaNazwa + '\'' +
-                ", czyAnimacja=" + czyAnimacja +
-                ", rezyser='" + rezyser + '\'' +
-                '}';
+        return "Film:" + '\n' +
+                "id: " + id +'\n' +
+                "nazwa: " + nazwa + '\n' +
+                "czas trwania w minutach: " + ileMinut + '\n' +
+                "kategoria: " + kategoriaNazwa + '\n' +
+                "czy animacja: " + czyAnimacja + '\n' +
+                "rezyser: " + rezyser ;
     }
 }

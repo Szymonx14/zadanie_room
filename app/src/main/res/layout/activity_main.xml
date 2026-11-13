@@ -56,11 +56,12 @@
         android:text="Dodaj" />
 
     <Button
-        android:id="@+id/btnUpdate"
+        android:id="@+id/buttonAktualizacja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aktualizuj"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:text="Aktualizacja" />
+
 
     <ListView
         android:id="@+id/listView"
